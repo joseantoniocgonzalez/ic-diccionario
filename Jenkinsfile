@@ -44,20 +44,26 @@ pipeline {
     }
 
     post {
-        success {
-            echo '✅ Pipeline finalizado correctamente.'
-            mail to: 'er.joselin@gmail.com',
-                 subject: "✅ Éxito: ${currentBuild.fullDisplayName}",
-                 body: "🔗 Detalles del build: ${env.BUILD_URL}\nResultado: ${currentBuild.result}"
-        }
-        failure {
-            echo '❌ Ocurrió un error en el pipeline.'
-            mail to: 'er.joselin@gmail.com',
-                 subject: "❌ Fallo: ${currentBuild.fullDisplayName}",
-                 body: "🔗 Detalles del build: ${env.BUILD_URL}\nResultado: ${currentBuild.result}"
-        }
         always {
-            echo '📧 Notificación de correo enviada.'
+            def changes = ""
+            if (currentBuild.changeSets.size() > 0) {
+                currentBuild.changeSets.each { changeSet ->
+                    changeSet.items.each { item ->
+                        changes += "- ${item.commitId.take(7)}: ${item.msg} (por ${item.author})\n"
+                    }
+                }
+            } else {
+                changes = "No hubo cambios desde el último build."
+            }
+
+            mail to: 'er.joselin@gmail.com',
+                 subject: "🔔 Estado del pipeline: ${currentBuild.fullDisplayName}",
+                 body: """🔗 Detalles del build: ${env.BUILD_URL}
+Resultado: ${currentBuild.result}
+
+📝 Cambios desde el último build:
+${changes}
+"""
         }
     }
 }
