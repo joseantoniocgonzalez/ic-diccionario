@@ -46,18 +46,18 @@ pipeline {
     post {
         success {
             echo '✅ Pipeline finalizado correctamente.'
-            mail to: 'usuario@gonzalonazareno.org',
+            mail to: 'er.joselin@gmail.com',
                  subject: "✅ Éxito: ${currentBuild.fullDisplayName}",
-                 body: "🔗 Detalles: ${env.BUILD_URL}\nResultado: ${currentBuild.result}"
+                 body: "🔗 Detalles del build: ${env.BUILD_URL}\nResultado: ${currentBuild.result}"
         }
         failure {
             echo '❌ Ocurrió un error en el pipeline.'
-            mail to: 'usuario@gonzalonazareno.org',
+            mail to: 'er.joselin@gmail.com',
                  subject: "❌ Fallo: ${currentBuild.fullDisplayName}",
-                 body: "🔗 Detalles: ${env.BUILD_URL}\nResultado: ${currentBuild.result}"
+                 body: "🔗 Detalles del build: ${env.BUILD_URL}\nResultado: ${currentBuild.result}"
         }
         always {
-            echo '📧 Se ha enviado una notificación por correo.'
+            echo '📧 Notificación de correo enviada.'
         }
     }
 }
